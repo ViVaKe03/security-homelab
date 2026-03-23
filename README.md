@@ -1,6 +1,6 @@
 # Security Homelab
 
-A hands-on security lab for learning EASM, SIEM operations, vulnerability analysis, and network security. Built as part of my CompTIA Security+ preparation and cybersecurity career development.
+A hands-on security lab forlearning all things security related. I switched from looking at tutorials and reading about stuff to just trying it out, building it, so i can understand it.
 
 ## Architecture
 
