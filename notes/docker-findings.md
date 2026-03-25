@@ -57,3 +57,4 @@ docker rm dvwa
 Deletes the container completely. After this `docker ps -a` won't show it anymore and `docker logs dvwa` will give an error because there is nothing left. Important: I have to `docker stop` first, then `docker rm`. A running container cannot be deleted.
 
 After `docker rm` the image is still on my machine. Only the container is gone. If I want DVWA back I need to run `docker run -d -p 8080:80 --name dvwa vulnerables/web-dvwa` again to create a new container from the same image. This new container doesn't have memory from the other and is a brand new one.
+
