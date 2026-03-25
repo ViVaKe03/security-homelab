@@ -5,9 +5,9 @@
 I'm currently in preparation for the Security+ exam and about to start a job in Consulting for Cybersecurity focused on External Attack Surface Management. 
 So I wanted to spin up a DVWA, a damn vulnerable web application where you can try out a lot of different attacks to deepen your understanding about these kind of things. 
 But if I would have wanted to install it on my Fedora I would have to install PHP, apache and a lot of other things. 
-This can create a lot of clutter in your system it can clash with other programs running on my laptop. Docker solves that. 
+This can create a lot of clutter in your system and it can clash with other programs running on my laptop. Docker solves that. 
 It uses containers that are like isolated boxes on my computer. Each container has its own webserver, database. Even if I break something, very likely to happen, I can just restart it and start over. 
-Docker is also the standard of how software is being deployed today. it can run on everything independently. So it is not only great for my homelab but also for my skill set in the future.
+Docker is also the standard of how software is being deployed today. It can run on everything independently. So it is not only great for my homelab but also for my skill set in the future.
 
 **How it works**
 
@@ -31,7 +31,7 @@ sudo systemctl start docker
 sudo systemctl enable docker 
 ```
 
-`sudo` runs the command as admin. `systemctl` controls services on Linux. `enable docker` start automatically every time I boot my laptop. Only need to run this once.
+`sudo` runs the command as admin. `systemctl` controls services on Linux. `enable docker` starts automatically every time I boot my laptop. Only need to run this once.
 
 ```bash
 docker run -d -p 8080:80 --name dvwa vulnerables/web-dvwa
@@ -58,3 +58,36 @@ Deletes the container completely. After this `docker ps -a` won't show it anymor
 
 After `docker rm` the image is still on my machine. Only the container is gone. If I want DVWA back I need to run `docker run -d -p 8080:80 --name dvwa vulnerables/web-dvwa` again to create a new container from the same image. This new container doesn't have memory from the other and is a brand new one.
 
+**Daily and general Startup Check**
+
+My problem was that after the first evening of trying everything out, I couldn't get it up and running the next day because I didn't understand everything on a fundamental level. So this section is about systematically checking what is built, what is running, and what is not.
+
+```bash
+systemctl status docker
+```
+
+Checks if the Docker service is running. If it says `active (running)` I'm good. If not:
+```bash
+sudo systemctl start docker
+```
+
+`sudo` runs the command as admin. `systemctl` controls services on Linux
+`start docker` tells it to start. without this running, no container would work.
+```bash
+docker ps
+```
+
+Shows running containers. If `dvwa` is here, I can go straight to `localhost:8080` in my browser.
+```bash
+docker ps -a
+```
+
+Shows all containers including stopped ones. If `dvwa` shows `Exited` in the STATUS column, it exists but is not running. Start it with:
+```bash
+docker start dvwa
+```
+
+If `dvwa` is not in `docker ps -a` at all, the container doesn't exist and I need to create it again:
+```bash
+docker run -d -p 8080:80 --name dvwa vulnerables/web-dvwa
+```
