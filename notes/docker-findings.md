@@ -25,65 +25,35 @@ sudo systemctl start docker
 ```
 
 `sudo` runs the command as admin. `systemctl` controls services on Linux
-`start docker` tells it to start. without this running, no container would work
+`start docker` tells it to start. without this running, no container would work.
+
 ```bash
 sudo systemctl enable docker 
 ```
 
-`sudo` runs the command as admin. `systemctl` controls services on Linux
-`enable docker`start automatically every time I boot my laptop. Only need to run this once
+`sudo` runs the command as admin. `systemctl` controls services on Linux. `enable docker` start automatically every time I boot my laptop. Only need to run this once.
 
 ```bash
-docker run -d -p 8080:80 --name dvwa
+docker run -d -p 8080:80 --name dvwa vulnerables/web-dvwa
 ```
 
 Creates a new container.
-`-d`runs in the background so my temrinal stays free
-`-p`
+`-d` runs in the background so my terminal stays free `-p 8080:80` maps my port 8080 to container port 80. `--name dvwa` gives it a name so I can use "dvwa" instead of random IDs. `vulnerables/web-dvwa` is the image from the Docker Hub, Docker downloads it automatically if it's not on my machine yet. This command I used only once to create the container.
 
+```bash
+docker stop dvwa
+```
 
+Stops the running container. It still exists, it is just not running anymore. Like shutting down a computer without throwing it away. You can still see it with `docker ps -a`.
+```bash
+docker logs dvwa
+```
 
+Shows everything the container has been printing — errors, access logs, startup messages. First thing I check when something is not working
+```bash
+docker rm dvwa
+```
 
+Deletes the container completely. After this `docker ps -a` won't show it anymore and `docker logs dvwa` will give an error because there is nothing left. Important: I have to `docker stop` first, then `docker rm`. A running container cannot be deleted.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- ## Key Concepts
-
-**Image**
-A blueprint that describes what software to install and how to configure it. Downloaded from Docker Hub. Does not run by itself.
-
-**Container**
-A running instance of an image. Created with `docker run`. Multiple containers can be created from the same image, each fully independent.
-
-**Port Mapping** (`-p 8080:80`) 
-Connects a port on the host (left) to a port inside the container (right). Without this, the container is isolated and unreachable from outside. Multiple containers can use the same internal port (e.g. 80) because they are isolated — only the host port must be unique.
-
-**Volumes**persistent storage that survives container deletion. Without a volume, all data inside a container is lost when it is removed.
-
-## Container Identification
-Every container gets a random ID (e.g. `f43905dfabad...`) and a random name (e.g. `dreamy_mendel`) on creation. Both can be used to reference the container. You don't need the full ID — just enough characters to be unique. If only one container starts with `f43`, that's enough. With `--name dvwa` you assign your own name and never need the ID at all.
-## Common Commands
-
-| Command | What it does |
-|---------|-------------|
-| `docker run -d -p 8080:80 --name dvwa image` | Create and start a container in the background with port mapping and a custom name |
-| `docker ps` | Show running containers |
-| `docker ps -a` | Show all containers including stopped ones |
-| `docker logs [name]` | Show the output/logs of a container |
-| `docker stop [name]` | Stop a running container |
-| `docker rm [name]` | Delete a stopped container |
-| `docker start [name]` | Restart a stopped container (keeps data) |
-| 'do -->
+After `docker rm` the image is still on my machine. Only the container is gone. If I want DVWA back I need to run `docker run -d -p 8080:80 --name dvwa vulnerables/web-dvwa` again to create a new container from the same image. This new container doesn't have memory from the other and is a brand new one.
